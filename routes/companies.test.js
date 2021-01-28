@@ -10,6 +10,7 @@ const {
   commonBeforeEach,
   commonAfterEach,
   commonAfterAll,
+  testJobIds,
   u1Token,
   adminToken,
 } = require("./_testCommon");
@@ -39,6 +40,14 @@ describe("POST /companies", function () {
     expect(resp.body).toEqual({
       company: newCompany,
     });
+  });
+
+  test("unauth for non-admin", async function () {
+    const resp = await request(app)
+        .post("/companies")
+        .send(newCompany)
+        .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
   });
 
   test("bad request with missing data", async function () {
